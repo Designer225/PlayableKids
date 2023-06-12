@@ -67,7 +67,7 @@ namespace PlayableKids.Patches
 
                 for (int i = 0; i < list.Count; i++)
                 {
-                    if (i + 3 < list.Count && list[i].Matches(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(AgeModel), nameof(AgeModel.HeroComesOfAge))))
+                    if (i + 3 < list.Count && list[i + 3].Matches(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(AgeModel), nameof(AgeModel.HeroComesOfAge))))
                     {
                         list.RemoveRange(i, 4);
                         i--;
@@ -99,7 +99,7 @@ namespace PlayableKids.Patches
 
                 for (int i = 0; i < list.Count; i++)
                 {
-                    if (i + 3 < list.Count && list[i].Matches(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(AgeModel), nameof(AgeModel.HeroComesOfAge))))
+                    if (i + 3 < list.Count && list[i + 3].Matches(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(AgeModel), nameof(AgeModel.HeroComesOfAge))))
                     {
                         list.RemoveRange(i, 4);
                         i--;
@@ -130,7 +130,7 @@ namespace PlayableKids.Patches
 
                 for (int i = 0; i < list.Count; i++)
                 {
-                    if (i + 3 < list.Count && list[i].Matches(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(AgeModel), nameof(AgeModel.HeroComesOfAge))))
+                    if (i + 3 < list.Count && list[i + 3].Matches(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(AgeModel), nameof(AgeModel.HeroComesOfAge))))
                     {
                         list.RemoveRange(i, 4);
                         i--;
@@ -159,7 +159,7 @@ namespace PlayableKids.Patches
 
                 for (int i = 0; i < list.Count; i++)
                 {
-                    if (i + 3 < list.Count && list[i].Matches(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(AgeModel), nameof(AgeModel.HeroComesOfAge))))
+                    if (i + 3 < list.Count && list[i + 3].Matches(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(AgeModel), nameof(AgeModel.HeroComesOfAge))))
                     {
                         list.RemoveRange(i, 4);
                         i--;
