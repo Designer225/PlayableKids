@@ -1,11 +1,6 @@
 ﻿using MCM.Abstractions.Attributes;
 using MCM.Abstractions.Attributes.v2;
 using MCM.Abstractions.Base.Global;
-using PlayableKids;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using TaleWorlds.Localization;
 
 namespace PlayableKids
 {
@@ -13,7 +8,7 @@ namespace PlayableKids
     {
         private const string
             MinimumAgesGroup = "{=PlayableKids.MinimumAges}Age Minimum Settings",
-            CustomAges = "{PlayableKids.CustomAges}Custom Age Settings";
+            CustomAges = "{=PlayableKids.CustomAges}Custom Age Settings";
 
         public override string Id => "PlayableKids.Settings";
 
@@ -33,7 +28,7 @@ namespace PlayableKids
         public int MinimumPlayerAge { get; set; } = 18;
 
         [SettingPropertyInteger("{=PlayableKids.MinimumVisibleAge}Minimum Visible Age", 3, 18, RequireRestart = false,
-            HintText = "{=PlayableKids.MinimumVisibleAge.Hint}The minimum age for a hero to appear in the encyclopedia. (Note that children do have entries, but those are normally hidden.)")]
+            HintText = "{=PlayableKids.MinimumVisibleAge.Hint}The minimum age for a hero to appear in the encyclopedia. (Note that children do have entries, but those are normally hidden from search.)")]
         [SettingPropertyGroup(MinimumAgesGroup)]
         public int MinimumVisibleAge { get; set; } = 6;
 
@@ -43,7 +38,7 @@ namespace PlayableKids
         public int MinimumPositionAge { get; set; } = 18;
 
         [SettingPropertyInteger("{=PlayableKids.MinimumExecutionAge}Minimum Execution Age", 3, 18, RequireRestart = false,
-            HintText = "{=PlayableKids.MinimumExecutionAge.Hint}Minimum age for a character to be executed.")]
+            HintText = "{=PlayableKids.MinimumExecutionAge.Hint}Minimum age for a character to be eligible for execution.")]
         [SettingPropertyGroup(MinimumAgesGroup)]
         public int MinimumExecutionAge { get; set; } = 18;
 
@@ -57,7 +52,7 @@ namespace PlayableKids
         [SettingPropertyGroup(CustomAges)]
         public int LittleSisterStartingAge { get; set; } = 14;
 
-        [SettingPropertyInteger("{=PlayableKids.LittleBrotherStartingAge}Minimum Execution Age", 3, 18, RequireRestart = false,
+        [SettingPropertyInteger("{=PlayableKids.LittleBrotherStartingAge}Little Brother Age", 3, 18, RequireRestart = false,
             HintText = "{=PlayableKids.LittleBrotherStartingAge.Hint}Starting age of the little brother.")]
         [SettingPropertyGroup(CustomAges)]
         public int LittleBrotherStartingAge { get; set; } = 11;

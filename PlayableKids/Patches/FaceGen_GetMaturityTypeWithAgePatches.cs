@@ -10,8 +10,10 @@ using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.ViewModelCollection;
 using TaleWorlds.CampaignSystem.ViewModelCollection.ClanManagement;
 using TaleWorlds.CampaignSystem.ViewModelCollection.KingdomManagement.Decisions.ItemTypes;
+using TaleWorlds.CampaignSystem.ViewModelCollection.Party;
 using TaleWorlds.Core;
 using TaleWorlds.Core.ViewModelCollection;
+using TaleWorlds.MountAndBlade.GauntletUI.TextureProviders;
 
 namespace PlayableKids.Patches
 {
@@ -23,13 +25,18 @@ namespace PlayableKids.Patches
 
         static IEnumerable<MethodBase> TargetMethods()
         {
+            // TaleWorlds.Core.ViewModelCollection
+            yield return AccessTools.Method(typeof(CharacterViewModel), nameof(CharacterViewModel.FillFrom));
             // TaleWorlds.CampaignSystem
             yield return AccessTools.Method(typeof(PartyScreenLogic), nameof(PartyScreenLogic.IsExecutable));
             // TaleWorlds.CampaignSystem.ViewModelCollection
-            yield return AccessTools.Method(typeof(CharacterViewModel), nameof(CharacterViewModel.FillFrom));
             yield return AccessTools.Method(typeof(ClanLordItemVM), nameof(ClanLordItemVM.UpdateProperties));
             yield return AccessTools.Constructor(typeof(HeroVM), new Type[] { typeof(Hero), typeof(bool) });
             yield return AccessTools.Method(typeof(HeroViewModel), nameof(HeroViewModel.FillFrom));
+            yield return AccessTools.Method(typeof(PartyCharacterVM), nameof(PartyCharacterVM.ExecuteExecuteTroop));
+            // TaleWorlds.MountAndBlade.GauntletUI
+            yield return AccessTools.Method(typeof(ImageIdentifierTextureProvider), nameof(ImageIdentifierTextureProvider.CreateImageWithId));
+            yield return AccessTools.Method(typeof(ImageIdentifierTextureProvider), nameof(ImageIdentifierTextureProvider.ReleaseCache));
         }
 
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
