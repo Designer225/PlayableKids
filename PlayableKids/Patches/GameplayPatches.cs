@@ -69,6 +69,8 @@ namespace PlayableKids.Patches
             {
                 if (instruction.Matches(OpCodes.Ldc_I4_5))
                     yield return new CodeInstruction(OpCodes.Ldc_I4_0);
+                else if (instruction.Matches(OpCodes.Ldc_I4_S, 27))
+                    yield return new CodeInstruction(OpCodes.Ldc_I4_S, 32);
                 else
                     yield return instruction;
             }
