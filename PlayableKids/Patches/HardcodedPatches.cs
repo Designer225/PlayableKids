@@ -29,7 +29,7 @@ namespace PlayableKids.Patches
         {
             foreach (var instruction in instructions)
             {
-                if (instruction.Matches(OpCodes.Ldc_R4, 18f))
+                if (instruction.Is(OpCodes.Ldc_R4, 18f))
                 {
                     yield return new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(Settings), nameof(Settings.Instance)));
                     yield return new CodeInstruction(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(Settings), nameof(Settings.MinimumPlayerAge)));

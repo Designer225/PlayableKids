@@ -20,6 +20,6 @@ namespace PlayableKids.Models
         public override bool IsEmissary(Hero hero) => BaseModel.IsEmissary(hero)
             || ((hero.CompanionOf == Clan.PlayerClan || hero.Clan == Clan.PlayerClan)
             && hero.PartyBelongedTo == null && hero.CurrentSettlement != null && hero.CurrentSettlement.IsFortification
-            && !hero.IsPrisoner && hero.Age >= Settings.Instance.MinimumPositionAge);
+            && !hero.IsPrisoner && hero.Age >= Settings.Instance.MinimumPlayerAge);
     }
 }

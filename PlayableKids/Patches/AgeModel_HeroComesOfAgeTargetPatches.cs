@@ -37,7 +37,7 @@ namespace PlayableKids.Patches
                 yield return AccessTools.Method(typeof(CompanionRolesCampaignBehavior), "CreateNewHeroForNewCompanionClan");
                 // StoryMode
                 yield return AccessTools.Method(typeof(MainStorylineCampaignBehavior), "OnGameLoadFinished");
-                yield return AccessTools.Method(typeof(RescueFamilyQuestBehavior), "OnCompleteWithSuccess");
+                yield return AccessTools.Method(typeof(RescueFamilyQuestBehavior.RescueFamilyQuest), "OnCompleteWithSuccess");
                 // TaleWorlds.CampaignSystem
                 yield return AccessTools.Method(typeof(BannerCampaignBehavior), "CanBannerBeGivenToHero");
                 yield return AccessTools.Method(typeof(CampaignCheats), nameof(CampaignCheats.SetMainHeroAge));
@@ -48,6 +48,7 @@ namespace PlayableKids.Patches
                 yield return AccessTools.Method(typeof(FactionHelper), "IsMainClanMemberAvailableForRelocate");
                 yield return AccessTools.Method(typeof(FactionManager), nameof(FactionManager.GetRelationBetweenClans));
                 yield return AccessTools.Method(typeof(FightTournamentGame), "CanNpcJoinTournament");
+                yield return AccessTools.PropertyGetter(typeof(Hero), nameof(Hero.IsChild));
                 yield return AccessTools.Method(typeof(HeroAgentSpawnCampaignBehavior), "AddCompanionsAndClanMembersToSettlement");
                 yield return AccessTools.Method(typeof(HeroAgentSpawnCampaignBehavior), "AddLordsHallCharacters");
                 yield return AccessTools.Method(typeof(HeroCreator), "CreateNewHero");
@@ -59,6 +60,12 @@ namespace PlayableKids.Patches
                 yield return AccessTools.Method(typeof(TownHelpers), nameof(TownHelpers.RequestAMeetingHeroWithoutPartyCondition));
                 // TaleWorlds.CampaignSystem.ViewModelCollection
                 yield return AccessTools.Method(typeof(SettlementMenuOverlayVM), "ExecuteOnSetAsActiveContextMenuItem");
+
+                // originally for PositionAge, which was removed
+                // TaleWorlds.CampaignSystem
+                yield return AccessTools.Method(typeof(ClanVariablesCampaignBehavior), "UpdateGovernorsOfClan");
+                yield return AccessTools.Method(typeof(IssuesCampaignBehavior), "CreateAnIssueForClanNobles");
+                yield return AccessTools.Method(typeof(LandLordCompanyOfTroubleIssueBehavior.LandLordCompanyOfTroubleIssueQuest), "PersuasionDialogForLordGeneralCondition");
             }
 
             static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
@@ -67,11 +74,12 @@ namespace PlayableKids.Patches
 
                 for (int i = 0; i < list.Count; i++)
                 {
-                    if (i + 3 < list.Count && list[i + 3].Matches(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(AgeModel), nameof(AgeModel.HeroComesOfAge))))
+                    if (i + 3 < list.Count && list[i + 3].Is(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(AgeModel), nameof(AgeModel.HeroComesOfAge))))
                     {
+                        var labels = list[i].ExtractLabels();
                         list.RemoveRange(i, 4);
                         i--;
-                        yield return new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(Settings), nameof(Settings.Instance)));
+                        yield return new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(Settings), nameof(Settings.Instance))).WithLabels(labels);
                         yield return new CodeInstruction(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(Settings), nameof(Settings.MinimumPlayerAge)));
                     }
                     else
@@ -87,7 +95,7 @@ namespace PlayableKids.Patches
             static IEnumerable<MethodBase> TargetMethods()
             {
                 // TaleWorlds.CampaignSystem
-                yield return AccessTools.Method(typeof(DefaultEncyclopediaHeroPage), "InitializeListItems");
+                //yield return AccessTools.EnumeratorMoveNext(AccessTools.Method(typeof(DefaultEncyclopediaHeroPage), "InitializeListItems")); // doesn't seem to work
                 // TaleWorlds.CampaignSystem.ViewModelCollection
                 yield return AccessTools.Method(typeof(EncyclopediaHeroPageVM), "AddHeroToRelatedVMList");
                 yield return AccessTools.Method(typeof(EncyclopediaHeroPageVM), nameof(EncyclopediaHeroPageVM.Refresh));
@@ -99,11 +107,12 @@ namespace PlayableKids.Patches
 
                 for (int i = 0; i < list.Count; i++)
                 {
-                    if (i + 3 < list.Count && list[i + 3].Matches(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(AgeModel), nameof(AgeModel.HeroComesOfAge))))
+                    if (i + 3 < list.Count && list[i + 3].Is(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(AgeModel), nameof(AgeModel.HeroComesOfAge))))
                     {
+                        var labels = list[i].ExtractLabels();
                         list.RemoveRange(i, 4);
                         i--;
-                        yield return new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(Settings), nameof(Settings.Instance)));
+                        yield return new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(Settings), nameof(Settings.Instance))).WithLabels(labels);
                         yield return new CodeInstruction(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(Settings), nameof(Settings.MinimumVisibleAge)));
                     }
                     else
@@ -112,36 +121,37 @@ namespace PlayableKids.Patches
             }
         }
 
-        [HarmonyPatch]
-        [HarmonyPatchCategory(Category)]
-        static class PositionAgePatches
-        {
-            static IEnumerable<MethodBase> TargetMethods()
-            {
-                // TaleWorlds.CampaignSystem
-                yield return AccessTools.Method(typeof(ClanVariablesCampaignBehavior), "UpdateGovernorsOfClan");
-                yield return AccessTools.Method(typeof(IssuesCampaignBehavior), "CreateAnIssueForClanNobles");
-                yield return AccessTools.Method(typeof(LandLordCompanyOfTroubleIssueBehavior), "PersuasionDialogForLordGeneralCondition");
-            }
+        //[HarmonyPatch]
+        //[HarmonyPatchCategory(Category)]
+        //static class PositionAgePatches
+        //{
+        //    static IEnumerable<MethodBase> TargetMethods()
+        //    {
+        //        // TaleWorlds.CampaignSystem
+        //        yield return AccessTools.Method(typeof(ClanVariablesCampaignBehavior), "UpdateGovernorsOfClan");
+        //        yield return AccessTools.Method(typeof(IssuesCampaignBehavior), "CreateAnIssueForClanNobles");
+        //        yield return AccessTools.Method(typeof(LandLordCompanyOfTroubleIssueBehavior.LandLordCompanyOfTroubleIssueQuest), "PersuasionDialogForLordGeneralCondition");
+        //    }
 
-            static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-            {
-                var list = instructions.ToList();
+        //    static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        //    {
+        //        var list = instructions.ToList();
 
-                for (int i = 0; i < list.Count; i++)
-                {
-                    if (i + 3 < list.Count && list[i + 3].Matches(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(AgeModel), nameof(AgeModel.HeroComesOfAge))))
-                    {
-                        list.RemoveRange(i, 4);
-                        i--;
-                        yield return new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(Settings), nameof(Settings.Instance)));
-                        yield return new CodeInstruction(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(Settings), nameof(Settings.MinimumPositionAge)));
-                    }
-                    else
-                        yield return list[i];
-                }
-            }
-        }
+        //        for (int i = 0; i < list.Count; i++)
+        //        {
+        //            if (i + 3 < list.Count && list[i + 3].Matches(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(AgeModel), nameof(AgeModel.HeroComesOfAge))))
+        //            {
+        //                var labels = list[i].ExtractLabels();
+        //                list.RemoveRange(i, 4);
+        //                i--;
+        //                yield return new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(Settings), nameof(Settings.Instance))).WithLabels(labels);
+        //                yield return new CodeInstruction(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(Settings), nameof(Settings.MinimumPositionAge)));
+        //            }
+        //            else
+        //                yield return list[i];
+        //        }
+        //    }
+        //}
 
         [HarmonyPatch]
         [HarmonyPatchCategory(Category)]
@@ -159,11 +169,12 @@ namespace PlayableKids.Patches
 
                 for (int i = 0; i < list.Count; i++)
                 {
-                    if (i + 3 < list.Count && list[i + 3].Matches(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(AgeModel), nameof(AgeModel.HeroComesOfAge))))
+                    if (i + 3 < list.Count && list[i + 3].Is(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(AgeModel), nameof(AgeModel.HeroComesOfAge))))
                     {
+                        var labels = list[i].ExtractLabels();
                         list.RemoveRange(i, 4);
                         i--;
-                        yield return new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(Settings), nameof(Settings.Instance)));
+                        yield return new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(Settings), nameof(Settings.Instance))).WithLabels(labels);
                         yield return new CodeInstruction(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(Settings), nameof(Settings.MinimumExecutionAge)));
                     }
                     else

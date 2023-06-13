@@ -3,25 +3,31 @@ using Helpers;
 using SandBox.CampaignBehaviors;
 using StoryMode.CharacterCreationContent;
 using StoryMode.StoryModeObjects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.Emit;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
+using TaleWorlds.CampaignSystem.Encyclopedia;
+using TaleWorlds.CampaignSystem.Encyclopedia.Pages;
+using TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Pages;
 using TaleWorlds.Core;
+using TaleWorlds.Library;
+using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.View.Tableaus;
 
 namespace PlayableKids.Patches
 {
+    [HarmonyPatch]
     internal static class GameplayPatches
     {
         internal const string Category = "PlayableKids.Misc";
 
-        internal static bool Matches(this CodeInstruction instruction, OpCode opcode) => instruction.opcode == opcode;
-
-        internal static bool Matches<T>(this CodeInstruction instruction, OpCode opcode, T operand)
-            => instruction.Matches(opcode) && instruction.operand is T t && t.Equals(operand);
+        private static readonly MethodInfo DefaultEncyclopediaHeroPage_CanPlayerSeeValuesOf
+            = AccessTools.Method(typeof(DefaultEncyclopediaHeroPage), "CanPlayerSeeValuesOf");
 
         internal static void Patch()
         {
@@ -67,12 +73,62 @@ namespace PlayableKids.Patches
         {
             foreach (var instruction in instructions)
             {
-                if (instruction.Matches(OpCodes.Ldc_I4_5))
+                if (instruction.opcode == OpCodes.Ldc_I4_5)
                     yield return new CodeInstruction(OpCodes.Ldc_I4_0);
-                else if (instruction.Matches(OpCodes.Ldc_I4_S, 27))
+                else if (instruction.Is(OpCodes.Ldc_I4_S, 27))
                     yield return new CodeInstruction(OpCodes.Ldc_I4_S, 32);
                 else
                     yield return instruction;
+            }
+        }
+
+        [HarmonyPatch(typeof(DefaultEncyclopediaHeroPage), "InitializeListItems")]
+        [HarmonyPostfix]
+        static IEnumerable<EncyclopediaListItem> DefaultEncyclopediaHeroPage_InitializeListItemsPassThroughPostfix
+            (IEnumerable<EncyclopediaListItem> values, DefaultEncyclopediaHeroPage __instance)
+        {
+            // included are fine; the rest needs processing
+            foreach (var value in values)
+                yield return value;
+
+            // the processing
+            var toIncludedHeroes = values.Select(x => x.Object).Cast<Hero>();
+            var visibleAge = Settings.Instance.MinimumVisibleAge;
+            var func = AccessTools.MethodDelegate<Func<Hero, bool>>(DefaultEncyclopediaHeroPage_CanPlayerSeeValuesOf, __instance);
+            TextObject heroName = new TextObject("{=TauRjAud}{NAME} of the {FACTION}");
+
+            foreach (var hero in Hero.AllAliveHeroes.Except(toIncludedHeroes)
+                .Where(x => __instance.IsValidEncyclopediaItem(x) && !x.IsNotable && x.Age >= visibleAge))
+            {
+                var clan = hero.Clan;
+                string name;
+                if ((clan != null ? (!clan.IsNeutralClan ? 1 : 0) : 0) != 0)
+                {
+                    heroName.SetTextVariable("NAME", hero.FirstName ?? hero.Name);
+                    heroName.SetTextVariable("FACTION", hero.Clan?.Name ?? TextObject.Empty);
+                    name = heroName.ToString();
+                }
+                else
+                    name = hero.Name.ToString();
+                yield return new EncyclopediaListItem(hero, name, "", hero.StringId, __instance.GetIdentifier(typeof(Hero)),
+                    func(hero), () => InformationManager.ShowTooltip(typeof(Hero), hero, false));
+            }
+
+            foreach (var hero in Hero.DeadOrDisabledHeroes.Except(toIncludedHeroes)
+                .Where(x => __instance.IsValidEncyclopediaItem(x) && !x.IsNotable && x.Age >= visibleAge))
+            {
+                Clan clan = hero.Clan;
+                if ((clan != null ? (!clan.IsNeutralClan ? 1 : 0) : 0) != 0)
+                {
+                    heroName.SetTextVariable("NAME", hero.FirstName ?? hero.Name);
+                    heroName.SetTextVariable("FACTION", hero.Clan?.Name ?? TextObject.Empty);
+                    yield return new EncyclopediaListItem(hero, heroName.ToString(), "", hero.StringId,
+                        __instance.GetIdentifier(typeof(Hero)), func(hero), () => InformationManager.ShowTooltip(typeof(Hero), hero, false));
+                }
+                else
+                    yield return new EncyclopediaListItem(hero, hero.Name.ToString(), "", hero.StringId,
+                        __instance.GetIdentifier(typeof(Hero)), func(hero), () => InformationManager.ShowTooltip(typeof(Hero), hero, false));
+
             }
         }
 
@@ -83,13 +139,13 @@ namespace PlayableKids.Patches
             var list = instructions.ToList();
             for (int i = 0; i < list.Count; i++)
             {
-                if (list[i].Matches(OpCodes.Ldarg_0) && i + 3 < list.Count && list[i + 3].Matches(OpCodes.Starg_S))
+                if (list[i].opcode == OpCodes.Ldarg_0 && i + 3 < list.Count && list[i + 3].opcode == OpCodes.Starg_S)
                 {
                     list.RemoveRange(i, 3);
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
                     yield return list[i];
                 }
-                else if (list[i].Matches(OpCodes.Stloc_S) && list[i].operand is LocalBuilder lb && lb.LocalIndex == 5)
+                else if (list[i].opcode == OpCodes.Stloc_S && list[i].operand is LocalBuilder lb && lb.LocalIndex == 5)
                 {
                     yield return list[i];
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
@@ -111,7 +167,7 @@ namespace PlayableKids.Patches
             for (int i = 0; i < list.Count; i++)
             {
                 yield return list[i];
-                if (list[i].Matches(OpCodes.Call, AccessTools.Method(typeof(MBBodyProperties), nameof(MBBodyProperties.GetMaturityType))))
+                if (list[i].Is(OpCodes.Call, AccessTools.Method(typeof(MBBodyProperties), nameof(MBBodyProperties.GetMaturityType))))
                     list[i + 1] = new CodeInstruction(OpCodes.Ldc_I4_0);
             }
         }
@@ -149,8 +205,8 @@ namespace PlayableKids.Patches
             for (int i = 0; i < list.Count; i++)
             {
                 yield return list[i];
-                if (list[i].Matches(OpCodes.Ldfld, AccessTools.Field(typeof(BasicCharacterTableau), "_faceDirtAmount"))
-                    && list[i + 1].Matches(OpCodes.Ldloc_S) && list[i + 1].operand is LocalBuilder lb && lb.LocalIndex == 4)
+                if (list[i].Is(OpCodes.Ldfld, AccessTools.Field(typeof(BasicCharacterTableau), "_faceDirtAmount"))
+                    && list[i + 1].opcode == OpCodes.Ldloc_S && list[i + 1].operand is LocalBuilder lb && lb.LocalIndex == 4)
                 {
                     list.RemoveAt(i + 1);
                     yield return new CodeInstruction(OpCodes.Ldarg_0);

@@ -32,10 +32,10 @@ namespace PlayableKids
         [SettingPropertyGroup(MinimumAgesGroup)]
         public int MinimumVisibleAge { get; set; } = 6;
 
-        [SettingPropertyInteger("{=PlayableKids.MinimumPositionAge}Minimum Position Age", 6, 18, RequireRestart = false,
-            HintText = "{=PlayableKids.MinimumPositionAge.Hint}The minimum age for a hero to perform in a position.")]
-        [SettingPropertyGroup(MinimumAgesGroup)]
-        public int MinimumPositionAge { get; set; } = 18;
+        //[SettingPropertyInteger("{=PlayableKids.MinimumPositionAge}Minimum Position Age", 6, 18, RequireRestart = false,
+        //    HintText = "{=PlayableKids.MinimumPositionAge.Hint}The minimum age for a hero to perform in a position.")]
+        //[SettingPropertyGroup(MinimumAgesGroup)]
+        //public int MinimumPositionAge { get; set; } = 18;
 
         [SettingPropertyInteger("{=PlayableKids.MinimumExecutionAge}Minimum Execution Age", 3, 18, RequireRestart = false,
             HintText = "{=PlayableKids.MinimumExecutionAge.Hint}Minimum age for a character to be eligible for execution.")]

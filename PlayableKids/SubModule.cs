@@ -1,8 +1,11 @@
 ﻿using PlayableKids.Models;
 using PlayableKids.Patches;
 using System;
+using System.Linq;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.Core;
+using TaleWorlds.LinQuick;
 using TaleWorlds.MountAndBlade;
 
 namespace PlayableKids
@@ -30,8 +33,8 @@ namespace PlayableKids
             // add game models
             if (Settings.Instance.OverrideWithModels)
             {
-                gameStarter.AddModel(new WrappedAgeModel(campaign.Models.AgeModel));
-                gameStarter.AddModel(new WrappedEmissaryModel(campaign.Models.EmissaryModel));
+                gameStarter.AddModel(new WrappedAgeModel(gameStarter.Models.WhereQ(x => x is AgeModel).Cast<AgeModel>().Last()));
+                gameStarter.AddModel(new WrappedEmissaryModel(gameStarter.Models.WhereQ(x => x is EmissaryModel).Cast<EmissaryModel>().Last()));
             }
         }
     }

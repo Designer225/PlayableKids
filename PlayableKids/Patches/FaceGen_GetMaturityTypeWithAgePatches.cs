@@ -46,7 +46,7 @@ namespace PlayableKids.Patches
             for (int i = 0; i < list.Count; i++)
             {
                 yield return list[i];
-                if (list[i].Matches(OpCodes.Call, AccessTools.Method(typeof(FaceGen), nameof(FaceGen.GetMaturityTypeWithAge))))
+                if (list[i].Is(OpCodes.Call, AccessTools.Method(typeof(FaceGen), nameof(FaceGen.GetMaturityTypeWithAge))))
                     list[i + 1] = new CodeInstruction(OpCodes.Ldc_I4_0);
             }
         }
