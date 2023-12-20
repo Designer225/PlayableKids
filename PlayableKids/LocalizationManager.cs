@@ -28,7 +28,8 @@ namespace PlayableKids
         public static string Localized(this string key, Dictionary<string, object> attributes)
         {
             var newLoc = key.GetLocalizationKey().CopyTextObject();
-            newLoc.Attributes.AddRange(attributes);
+            foreach (var attr in attributes)
+                newLoc.Attributes.Add(attr.Key, attr.Value);
             return newLoc.ToString();
         }
     }

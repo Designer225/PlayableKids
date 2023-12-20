@@ -102,7 +102,7 @@ namespace PlayableKids.Patches
             {
                 var clan = hero.Clan;
                 string name;
-                if ((clan != null ? (!clan.IsNeutralClan ? 1 : 0) : 0) != 0)
+                if (clan != null)
                 {
                     heroName.SetTextVariable("NAME", hero.FirstName ?? hero.Name);
                     heroName.SetTextVariable("FACTION", hero.Clan?.Name ?? TextObject.Empty);
@@ -118,7 +118,7 @@ namespace PlayableKids.Patches
                 .Where(x => __instance.IsValidEncyclopediaItem(x) && !x.IsNotable && x.Age >= visibleAge))
             {
                 Clan clan = hero.Clan;
-                if ((clan != null ? (!clan.IsNeutralClan ? 1 : 0) : 0) != 0)
+                if (clan != null)
                 {
                     heroName.SetTextVariable("NAME", hero.FirstName ?? hero.Name);
                     heroName.SetTextVariable("FACTION", hero.Clan?.Name ?? TextObject.Empty);
@@ -145,7 +145,7 @@ namespace PlayableKids.Patches
                     yield return new CodeInstruction(OpCodes.Ldarg_1);
                     yield return list[i];
                 }
-                else if (list[i].opcode == OpCodes.Stloc_S && list[i].operand is LocalBuilder lb && lb.LocalIndex == 5)
+                else if (list[i].opcode == OpCodes.Stloc_S && list[i].operand is LocalBuilder lb && lb.LocalIndex == 6)
                 {
                     yield return list[i];
                     yield return new CodeInstruction(OpCodes.Ldarg_1);

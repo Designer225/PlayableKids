@@ -63,7 +63,9 @@ namespace PlayableKids.Patches
 
                 // originally for PositionAge, which was removed
                 // TaleWorlds.CampaignSystem
-                yield return AccessTools.Method(typeof(ClanVariablesCampaignBehavior), "UpdateGovernorsOfClan");
+                // below line is replaced by DefaultClanPoliticsModel.CanHeroBeGovernor, which uses Hero.IsChild instead of AgeModel.HeroComesOfAge
+                // Hero.IsChild is already patched earlier, so this one is skipped.
+                //yield return AccessTools.Method(typeof(ClanVariablesCampaignBehavior), "UpdateGovernorsOfClan");
                 yield return AccessTools.Method(typeof(IssuesCampaignBehavior), "CreateAnIssueForClanNobles");
                 yield return AccessTools.Method(typeof(LandLordCompanyOfTroubleIssueBehavior.LandLordCompanyOfTroubleIssueQuest), "PersuasionDialogForLordGeneralCondition");
             }
@@ -95,7 +97,11 @@ namespace PlayableKids.Patches
             static IEnumerable<MethodBase> TargetMethods()
             {
                 // TaleWorlds.CampaignSystem
-                //yield return AccessTools.EnumeratorMoveNext(AccessTools.Method(typeof(DefaultEncyclopediaHeroPage), "InitializeListItems")); // doesn't seem to work
+                //// trying to get this to work...
+                //MethodInfo moveNext = AccessTools.EnumeratorMoveNext(AccessTools.Method(typeof(DefaultEncyclopediaHeroPage), "InitializeListItems"));
+                //if (moveNext != null) yield return moveNext;
+                //else yield return AccessTools.Method(typeof(DefaultEncyclopediaHeroPage), "InitializeListItems");
+
                 // TaleWorlds.CampaignSystem.ViewModelCollection
                 yield return AccessTools.Method(typeof(EncyclopediaHeroPageVM), "AddHeroToRelatedVMList");
                 yield return AccessTools.Method(typeof(EncyclopediaHeroPageVM), nameof(EncyclopediaHeroPageVM.Refresh));

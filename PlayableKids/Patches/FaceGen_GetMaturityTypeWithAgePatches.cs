@@ -26,7 +26,8 @@ namespace PlayableKids.Patches
         static IEnumerable<MethodBase> TargetMethods()
         {
             // TaleWorlds.Core.ViewModelCollection
-            yield return AccessTools.Method(typeof(CharacterViewModel), nameof(CharacterViewModel.FillFrom));
+            yield return AccessTools.Method(typeof(CharacterViewModel), nameof(CharacterViewModel.FillFrom),
+                new Type[] { typeof(BasicCharacterObject), typeof(int) });
             // TaleWorlds.CampaignSystem
             yield return AccessTools.Method(typeof(PartyScreenLogic), nameof(PartyScreenLogic.IsExecutable));
             // TaleWorlds.CampaignSystem.ViewModelCollection

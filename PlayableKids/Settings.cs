@@ -42,7 +42,7 @@ namespace PlayableKids
         [SettingPropertyGroup(MinimumAgesGroup)]
         public int MinimumExecutionAge { get; set; } = 18;
 
-        [SettingPropertyInteger("{=PlayableKids.ElderBrotherStartingAge}Elder Brother Age", 3, 18, RequireRestart = false,
+        [SettingPropertyInteger("{=PlayableKids.ElderBrotherStartingAge}Elder Brother Age", 3, 25, RequireRestart = false,
             HintText = "{=PlayableKids.ElderBrotherStartingAge.Hint}Starting age of the elder brother.")]
         [SettingPropertyGroup(CustomAges)]
         public int ElderBrotherStartingAge { get; set; } = 25;

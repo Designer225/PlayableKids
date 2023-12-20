@@ -10,8 +10,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Bannerlord.MCM" Version="5.7.1" />
-    <PackageReference Include="Bannerlord.ReferenceAssemblies" Version="1.1.4.17949" />
+    <PackageReference Include="Bannerlord.MCM" Version="5.9.1" />
+    <PackageReference Include="Bannerlord.ReferenceAssemblies" Version="1.2.7.31207" />
   </ItemGroup>
 
 </Project>
