@@ -12,10 +12,12 @@ using TaleWorlds.Core.ViewModelCollection;
 using TaleWorlds.MountAndBlade.GauntletUI.TextureProviders;
 using System.Reflection.Emit;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
+using TaleWorlds.Library;
 
 namespace PlayableKids.Patches
 {
     [HarmonyPatch]
+    [HarmonyPatchCategory(Category)]
     internal static class Hero_GetIsChildPatches
     {
         internal const string Category = "TaleWorlds.CampaignSystem.Hero.get_IsChild";
@@ -25,8 +27,10 @@ namespace PlayableKids.Patches
             yield return AccessTools.Method(typeof(InitialChildGenerationCampaignBehavior), "OnNewGameCreatedPartialFollowUp");
         }
 
-        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase original)
         {
+            Debug.Print($"[PlayableKids] Patching: {original}");
+
             foreach (var instruction in instructions)
             {
                 if (instruction.Is(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(Hero), nameof(Hero.IsChild))))

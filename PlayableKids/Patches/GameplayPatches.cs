@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.Encyclopedia;
@@ -22,21 +23,13 @@ using TaleWorlds.MountAndBlade.View.Tableaus;
 namespace PlayableKids.Patches
 {
     [HarmonyPatch]
+    [HarmonyPatchCategory(Category)]
     internal static class GameplayPatches
     {
         internal const string Category = "PlayableKids.Misc";
 
         private static readonly MethodInfo DefaultEncyclopediaHeroPage_CanPlayerSeeValuesOf
             = AccessTools.Method(typeof(DefaultEncyclopediaHeroPage), "CanPlayerSeeValuesOf");
-
-        internal static void Patch()
-        {
-            var instance = new Harmony("Designer225.PlayableKids");
-            instance.PatchCategory(AgeModel_HeroComesOfAgeTargetPatches.Category);
-            instance.PatchCategory(FaceGen_GetMaturityTypeWithAgePatches.Category);
-            instance.PatchCategory(HardcodedPatches.Category);
-            instance.PatchAllUncategorized();
-        }
 
         #region Patches
         #region StoryMode
@@ -69,8 +62,11 @@ namespace PlayableKids.Patches
         #region TaleWorlds.CampaignSystem
         [HarmonyPatch(typeof(CompanionsCampaignBehavior), "CreateCompanionAndAddToSettlement")]
         [HarmonyTranspiler]
-        static IEnumerable<CodeInstruction> CompanionsCampaignBehavior_CreateCompanionAndAddToSettlementTranspiler(IEnumerable<CodeInstruction> instructions)
+        static IEnumerable<CodeInstruction> CompanionsCampaignBehavior_CreateCompanionAndAddToSettlementTranspiler(
+            IEnumerable<CodeInstruction> instructions, MethodBase original)
         {
+            Debug.Print($"[PlayableKids] Patching: {original}");
+
             foreach (var instruction in instructions)
             {
                 if (instruction.opcode == OpCodes.Ldc_I4_5)
@@ -134,8 +130,10 @@ namespace PlayableKids.Patches
 
         [HarmonyPatch(typeof(HeroCreator), "CreateNewHero")]
         [HarmonyTranspiler]
-        static IEnumerable<CodeInstruction> HeroCreator_CreateNewHeroTranspiler(IEnumerable<CodeInstruction> instructions)
+        static IEnumerable<CodeInstruction> HeroCreator_CreateNewHeroTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original)
         {
+            Debug.Print($"[PlayableKids] Patching: {original}");
+
             var list = instructions.ToList();
             for (int i = 0; i < list.Count; i++)
             {
@@ -160,8 +158,10 @@ namespace PlayableKids.Patches
         #region TaleWorlds.MountAndBlade
         [HarmonyPatch(typeof(Mission), nameof(Mission.SpawnAgent))]
         [HarmonyTranspiler]
-        static IEnumerable<CodeInstruction> Mission_SpawnAgentTranspiler(IEnumerable<CodeInstruction> instructions)
+        static IEnumerable<CodeInstruction> Mission_SpawnAgentTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original)
         {
+            Debug.Print($"[PlayableKids] Patching: {original}");
+
             var list = instructions.ToList();
 
             for (int i = 0; i < list.Count; i++)
@@ -199,8 +199,10 @@ namespace PlayableKids.Patches
         #region TaleWorlds.MountAndBlade.View
         [HarmonyPatch(typeof(BasicCharacterTableau), "RefreshCharacterTableau")]
         [HarmonyTranspiler]
-        static IEnumerable<CodeInstruction> BasicCharacterTableau_RefreshCharacterTableauTranspiler(IEnumerable<CodeInstruction> instructions)
+        static IEnumerable<CodeInstruction> BasicCharacterTableau_RefreshCharacterTableauTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original)
         {
+            Debug.Print($"[PlayableKids] Patching: {original}");
+
             var list = instructions.ToList();
             for (int i = 0; i < list.Count; i++)
             {

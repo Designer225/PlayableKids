@@ -4,6 +4,7 @@ using SandBox.CampaignBehaviors;
 using StoryMode.GameComponents.CampaignBehaviors;
 using StoryMode.Quests.PlayerClanQuests;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -70,8 +71,9 @@ namespace PlayableKids.Patches
                 yield return AccessTools.Method(typeof(LandLordCompanyOfTroubleIssueBehavior.LandLordCompanyOfTroubleIssueQuest), "PersuasionDialogForLordGeneralCondition");
             }
 
-            static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+            static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase original)
             {
+                Debug.Print($"[PlayableKids] Patching: {original}");
                 var list = instructions.ToList();
 
                 for (int i = 0; i < list.Count; i++)
@@ -107,8 +109,9 @@ namespace PlayableKids.Patches
                 yield return AccessTools.Method(typeof(EncyclopediaHeroPageVM), nameof(EncyclopediaHeroPageVM.Refresh));
             }
 
-            static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+            static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase original)
             {
+                Debug.Print($"[PlayableKids] Patching: {original}");
                 var list = instructions.ToList();
 
                 for (int i = 0; i < list.Count; i++)
@@ -169,8 +172,9 @@ namespace PlayableKids.Patches
                 yield return AccessTools.Method(typeof(PartyScreenLogic), nameof(PartyScreenLogic.IsExecutable));
             }
 
-            static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+            static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase original)
             {
+                Debug.Print($"[PlayableKids] Patching: {original}");
                 var list = instructions.ToList();
 
                 for (int i = 0; i < list.Count; i++)

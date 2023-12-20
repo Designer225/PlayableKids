@@ -1,10 +1,13 @@
-﻿using PlayableKids.Models;
+﻿using HarmonyLib;
+using PlayableKids.Models;
 using PlayableKids.Patches;
 using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.Core;
+using TaleWorlds.Library;
 using TaleWorlds.LinQuick;
 using TaleWorlds.MountAndBlade;
 
@@ -14,13 +17,24 @@ namespace PlayableKids
     {
         private bool _initialized = false;
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
             base.OnBeforeInitialModuleScreenSetAsRoot();
             if (_initialized) return;
             _initialized = true;
 
-            GameplayPatches.Patch();
+            var instance = new Harmony("Designer225.PlayableKids");
+            Debug.Print($"[PlayableKids] Patching category: {AgeModel_HeroComesOfAgeTargetPatches.Category}");
+            instance.PatchCategory(AgeModel_HeroComesOfAgeTargetPatches.Category);
+            Debug.Print($"[PlayableKids] Patching category: {FaceGen_GetMaturityTypeWithAgePatches.Category}");
+            instance.PatchCategory(FaceGen_GetMaturityTypeWithAgePatches.Category);
+            Debug.Print($"[PlayableKids] Patching category: {GameplayPatches.Category}");
+            instance.PatchCategory(GameplayPatches.Category);
+            Debug.Print($"[PlayableKids] Patching category: {HardcodedPatches.Category}");
+            instance.PatchCategory(HardcodedPatches.Category);
+            Debug.Print($"[PlayableKids] Patching category: {Hero_GetIsChildPatches.Category}");
+            instance.PatchCategory(Hero_GetIsChildPatches.Category);
         }
 
         protected override void OnGameStart(Game game, IGameStarter gameStarterObject)

@@ -7,6 +7,7 @@ using System.Text;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.ViewModelCollection;
 using TaleWorlds.CampaignSystem.ViewModelCollection.KingdomManagement.Decisions.ItemTypes;
+using TaleWorlds.Library;
 
 namespace PlayableKids.Patches
 {
@@ -25,8 +26,10 @@ namespace PlayableKids.Patches
             yield return AccessTools.Method(typeof(ExpelClanDecisionItemVM), "InitValues");
         }
 
-        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase original)
         {
+            Debug.Print($"[PlayableKids] Patching: {original}");
+
             foreach (var instruction in instructions)
             {
                 if (instruction.Is(OpCodes.Ldc_R4, 18f))

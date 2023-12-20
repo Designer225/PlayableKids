@@ -13,6 +13,7 @@ using TaleWorlds.CampaignSystem.ViewModelCollection.KingdomManagement.Decisions.
 using TaleWorlds.CampaignSystem.ViewModelCollection.Party;
 using TaleWorlds.Core;
 using TaleWorlds.Core.ViewModelCollection;
+using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade.GauntletUI.TextureProviders;
 
 namespace PlayableKids.Patches
@@ -40,8 +41,9 @@ namespace PlayableKids.Patches
             yield return AccessTools.Method(typeof(ImageIdentifierTextureProvider), nameof(ImageIdentifierTextureProvider.ReleaseCache));
         }
 
-        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase original)
         {
+            Debug.Print($"[PlayableKids] Patching: {original}");
             var list = instructions.ToList();
 
             for (int i = 0; i < list.Count; i++)
