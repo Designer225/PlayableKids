@@ -7,7 +7,7 @@
     <OutputPath>$(BaseOutputPath)</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-    <Version>1.0.0.10</Version>
+    <Version>1.0.0.22</Version>
   </PropertyGroup>
 
   <ItemGroup>

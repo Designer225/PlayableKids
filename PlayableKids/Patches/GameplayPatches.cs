@@ -70,9 +70,17 @@ namespace PlayableKids.Patches
             foreach (var instruction in instructions)
             {
                 if (instruction.opcode == OpCodes.Ldc_I4_5)
-                    yield return new CodeInstruction(OpCodes.Ldc_I4_0);
+                {
+                    //yield return new CodeInstruction(OpCodes.Ldc_I4_0);
+                    yield return new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(Settings), nameof(Settings.Instance)));
+                    yield return new CodeInstruction(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(Settings), nameof(Settings.WandererMinAgeIncrease)));
+                }
                 else if (instruction.Is(OpCodes.Ldc_I4_S, 27))
-                    yield return new CodeInstruction(OpCodes.Ldc_I4_S, 32);
+                {
+                    //yield return new CodeInstruction(OpCodes.Ldc_I4_S, 32);
+                    yield return new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(Settings), nameof(Settings.Instance)));
+                    yield return new CodeInstruction(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(Settings), nameof(Settings.WandererAgeRandomization)));
+                }
                 else
                     yield return instruction;
             }

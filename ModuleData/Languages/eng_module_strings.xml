@@ -28,5 +28,9 @@
     <string id="PlayableKids.LittleSisterStartingAge.Hint" text="Starting age of the little sister."/>
     <string id="PlayableKids.LittleBrotherStartingAge" text="Little Brother Age"/>
     <string id="PlayableKids.LittleBrotherStartingAge.Hint" text="Starting age of the little brother."/>
+    <string id="PlayableKids.WandererMinAgeIncrease" text="Wanderer Mininum Age Increase"/>
+    <string id="PlayableKids.WandererMinAgeIncrease.Hint" text="Minimum increase to a wanderer's age."/>
+    <string id="PlayableKids.WandererAgeRandomization" text="Wanderer Age Randomization"/>
+    <string id="PlayableKids.WandererAgeRandomization.Hint" text="Randomization in a wanderer's age."/>
   </strings>
 </base>

@@ -22,6 +22,7 @@ namespace PlayableKids
             HintText = "{PlayableKids.OverrideWithModels.Hint}Select this to override functions within some models with model wrappers. Models are less prone to script breakage by updates, and model wrappers allow compatibility with existing models. Default is enabled. If disabled, patching will be used instead.")]
         public bool OverrideWithModels { get; set; } = true;
 
+        #region MinimumAgesGroup
         [SettingPropertyInteger("{=PlayableKids.MinimumPlayerAge}Minimum Playable Age", 6, 18, RequireRestart = false,
             HintText = "{=PlayableKids.MinimumPlayerAge.Hint}The minimum age for a hero to be playable.")]
         [SettingPropertyGroup(MinimumAgesGroup)]
@@ -41,7 +42,9 @@ namespace PlayableKids
             HintText = "{=PlayableKids.MinimumExecutionAge.Hint}Minimum age for a character to be eligible for execution.")]
         [SettingPropertyGroup(MinimumAgesGroup)]
         public int MinimumExecutionAge { get; set; } = 18;
+        #endregion
 
+        #region CustomAges
         [SettingPropertyInteger("{=PlayableKids.ElderBrotherStartingAge}Elder Brother Age", 3, 25, RequireRestart = false,
             HintText = "{=PlayableKids.ElderBrotherStartingAge.Hint}Starting age of the elder brother.")]
         [SettingPropertyGroup(CustomAges)]
@@ -56,5 +59,16 @@ namespace PlayableKids
             HintText = "{=PlayableKids.LittleBrotherStartingAge.Hint}Starting age of the little brother.")]
         [SettingPropertyGroup(CustomAges)]
         public int LittleBrotherStartingAge { get; set; } = 11;
+
+        [SettingPropertyInteger("{=PlayableKids.WandererMinAgeIncrease}Wanderer Mininum Age Increase", 0, 17, RequireRestart = false,
+            HintText = "{=PlayableKids.WandererMinAgeIncrease.Hint}Minimum increase to a wanderer's age.")]
+        [SettingPropertyGroup(CustomAges)]
+        public int WandererMinAgeIncrease { get; set; } = 5;
+
+        [SettingPropertyInteger("{=PlayableKids.WandererAgeRandomization}Wanderer Age Randomization", 0, 50, RequireRestart = false,
+            HintText = "{=PlayableKids.WandererAgeRandomization.Hint}Randomization in a wanderer's age.")]
+        [SettingPropertyGroup(CustomAges)]
+        public int WandererAgeRandomization { get; set; } = 27;
+        #endregion
     }
 }
