@@ -161,6 +161,10 @@ namespace PlayableKids.Patches
                     yield return list[i];
             }
         }
+
+        [HarmonyPatch(typeof(TeleportationCampaignBehavior), "OnHeroComesOfAge")]
+        [HarmonyPrefix]
+        static bool TeleportationCampaignBehavior_OnHeroComesOfAgePrefix(Hero hero) => hero.Clan != default;
         #endregion
 
         #region TaleWorlds.MountAndBlade
