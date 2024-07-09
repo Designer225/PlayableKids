@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using Helpers;
 using SandBox.CampaignBehaviors;
+using StoryMode;
 using StoryMode.CharacterCreationContent;
 using StoryMode.StoryModeObjects;
 using System;
@@ -165,6 +166,20 @@ namespace PlayableKids.Patches
         [HarmonyPatch(typeof(TeleportationCampaignBehavior), "OnHeroComesOfAge")]
         [HarmonyPrefix]
         static bool TeleportationCampaignBehavior_OnHeroComesOfAgePrefix(Hero hero) => hero.Clan != default;
+        #endregion
+
+        #region TaleWorlds.CampaignSystem.CampaignBehaviors
+        [HarmonyPatch(typeof(AgingCampaignBehavior), "DailyTickHero")]
+        [HarmonyPrefix]
+        static bool AgingCampaignBehavior_DailyTickHeroPrefix(Hero hero)
+        {
+            if (StoryModeManager.Current?.MainStoryLine?.FamilyRescued ?? true) return true;
+            if (hero.Age >= Campaign.Current.Models.AgeModel.HeroComesOfAge) return true;
+            if (hero == StoryModeHeroes.LittleBrother) return false;
+            if (hero == StoryModeHeroes.LittleSister) return false;
+            if (hero == StoryModeHeroes.ElderBrother) return false;
+            return true;
+        }
         #endregion
 
         #region TaleWorlds.MountAndBlade
