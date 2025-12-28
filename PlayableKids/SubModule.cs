@@ -25,8 +25,8 @@ namespace PlayableKids
             _initialized = true;
 
             var instance = new Harmony("Designer225.PlayableKids");
-            Debug.Print($"[PlayableKids] Patching category: {AgeModel_HeroComesOfAgeTargetPatches.Category}");
-            instance.PatchCategory(AgeModel_HeroComesOfAgeTargetPatches.Category);
+            Debug.Print($"[PlayableKids] Patching category: {AgeModelPatches.HeroComesOfAgeTargetPatches.Category}");
+            instance.PatchCategory(AgeModelPatches.HeroComesOfAgeTargetPatches.Category);
             Debug.Print($"[PlayableKids] Patching category: {FaceGen_GetMaturityTypeWithAgePatches.Category}");
             instance.PatchCategory(FaceGen_GetMaturityTypeWithAgePatches.Category);
             Debug.Print($"[PlayableKids] Patching category: {GameplayPatches.Category}");
@@ -41,15 +41,12 @@ namespace PlayableKids
         {
             base.OnGameStart(game, gameStarterObject);
 
-            if (!(game.GameType is Campaign campaign) || !(gameStarterObject is CampaignGameStarter gameStarter))
+            if (!(game.GameType is Campaign) || !(gameStarterObject is CampaignGameStarter gameStarter))
                 return;
 
             // add game models
-            if (Settings.Instance.OverrideWithModels)
-            {
-                gameStarter.AddModel(new WrappedAgeModel(gameStarter.Models.WhereQ(x => x is AgeModel).Cast<AgeModel>().Last()));
-                gameStarter.AddModel(new WrappedEmissaryModel(gameStarter.Models.WhereQ(x => x is EmissaryModel).Cast<EmissaryModel>().Last()));
-            }
+            gameStarter.AddModel(new WrappedAgeModel(gameStarter.Models.WhereQ(x => x is AgeModel).Cast<AgeModel>().Last()));
+            // gameStarter.AddModel(new WrappedEmissaryModel(gameStarter.Models.WhereQ(x => x is EmissaryModel).Cast<EmissaryModel>().Last()));
         }
     }
 }

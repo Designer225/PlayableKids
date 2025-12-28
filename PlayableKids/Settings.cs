@@ -18,10 +18,6 @@ namespace PlayableKids
 
         public override string FolderName => "PlayableKids";
 
-        [SettingPropertyBool("{=PlayableKids.OverrideWithModels}Override With Models", RequireRestart = true,
-            HintText = "{PlayableKids.OverrideWithModels.Hint}Select this to override functions within some models with model wrappers. Models are less prone to script breakage by updates, and model wrappers allow compatibility with existing models. Default is enabled. If disabled, patching will be used instead.")]
-        public bool OverrideWithModels { get; set; } = true;
-
         #region MinimumAgesGroup
         [SettingPropertyInteger("{=PlayableKids.MinimumPlayerAge}Minimum Playable Age", 6, 18, RequireRestart = false,
             HintText = "{=PlayableKids.MinimumPlayerAge.Hint}The minimum age for a hero to be playable.")]
@@ -45,6 +41,10 @@ namespace PlayableKids
         #endregion
 
         #region CustomAges
+        [SettingPropertyInteger("{=PlayableKids.PlayerStartingAge}Player Age", 3, 20, RequireRestart = false,
+            HintText = "{=PlayableKids.PlayerStartingAge.Hint}Starting age of the player. In Sandbox Mode, this determines the minimum age of the player (higher experience will still add 10 years per level).")]
+        public int PlayerStartingAge { get; set; } = 20;
+
         [SettingPropertyInteger("{=PlayableKids.ElderBrotherStartingAge}Elder Brother Age", 3, 25, RequireRestart = false,
             HintText = "{=PlayableKids.ElderBrotherStartingAge.Hint}Starting age of the elder brother.")]
         [SettingPropertyGroup(CustomAges)]
@@ -60,7 +60,7 @@ namespace PlayableKids
         [SettingPropertyGroup(CustomAges)]
         public int LittleBrotherStartingAge { get; set; } = 11;
 
-        [SettingPropertyInteger("{=PlayableKids.WandererMinAgeIncrease}Wanderer Mininum Age Increase", 0, 17, RequireRestart = false,
+        [SettingPropertyInteger("{=PlayableKids.WandererMinAgeIncrease}Wanderer Minimum Age Increase", 0, 17, RequireRestart = false,
             HintText = "{=PlayableKids.WandererMinAgeIncrease.Hint}Minimum increase to a wanderer's age.")]
         [SettingPropertyGroup(CustomAges)]
         public int WandererMinAgeIncrease { get; set; } = 5;

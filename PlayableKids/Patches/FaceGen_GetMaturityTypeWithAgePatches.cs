@@ -15,6 +15,7 @@ using TaleWorlds.Core;
 using TaleWorlds.Core.ViewModelCollection;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade.GauntletUI.TextureProviders;
+using TaleWorlds.MountAndBlade.GauntletUI.TextureProviders.ImageIdentifiers;
 
 namespace PlayableKids.Patches
 {
@@ -28,7 +29,7 @@ namespace PlayableKids.Patches
         {
             // TaleWorlds.Core.ViewModelCollection
             yield return AccessTools.Method(typeof(CharacterViewModel), nameof(CharacterViewModel.FillFrom),
-                new Type[] { typeof(BasicCharacterObject), typeof(int) });
+                new[] {typeof(BasicCharacterObject), typeof(int), typeof(string)});
             // TaleWorlds.CampaignSystem
             yield return AccessTools.Method(typeof(PartyScreenLogic), nameof(PartyScreenLogic.IsExecutable));
             // TaleWorlds.CampaignSystem.ViewModelCollection
@@ -37,8 +38,7 @@ namespace PlayableKids.Patches
             yield return AccessTools.Method(typeof(HeroViewModel), nameof(HeroViewModel.FillFrom), new Type[] { typeof(Hero), typeof(int), typeof(bool), typeof(bool) });
             yield return AccessTools.Method(typeof(PartyCharacterVM), nameof(PartyCharacterVM.ExecuteExecuteTroop));
             // TaleWorlds.MountAndBlade.GauntletUI
-            yield return AccessTools.Method(typeof(ImageIdentifierTextureProvider), nameof(ImageIdentifierTextureProvider.CreateImageWithId));
-            yield return AccessTools.Method(typeof(ImageIdentifierTextureProvider), nameof(ImageIdentifierTextureProvider.ReleaseCache));
+            yield return AccessTools.Method(typeof(CharacterImageTextureProvider), "OnCreateImageWithId");
         }
 
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase original)

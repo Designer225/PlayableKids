@@ -2,7 +2,6 @@
 using Helpers;
 using SandBox.CampaignBehaviors;
 using StoryMode;
-using StoryMode.CharacterCreationContent;
 using StoryMode.StoryModeObjects;
 using System;
 using System.Collections.Generic;
@@ -10,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
+using StoryMode.GameComponents.CampaignBehaviors;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.Encyclopedia;
@@ -34,9 +34,9 @@ namespace PlayableKids.Patches
 
         #region Patches
         #region StoryMode
-        [HarmonyPatch(typeof(StoryModeCharacterCreationContent), "EscapeOnInit")]
+        [HarmonyPatch(typeof(StoryModeCharacterCreationCampaignBehavior), "FinalizeParentsAndLittleSiblings")]
         [HarmonyPrefix]
-        static void StoryModeCharacterCreationContent_EscapeOnInitPrefix()
+        static void StoryModeCharacterCreationCampaignBehavior_FinalizeParentsAndLittleSiblings()
         {
             StoryModeHeroes.LittleBrother.SetBirthDay(HeroHelper.GetRandomBirthDayForAge(Settings.Instance.LittleBrotherStartingAge));
             StoryModeHeroes.LittleSister.SetBirthDay(HeroHelper.GetRandomBirthDayForAge(Settings.Instance.LittleSisterStartingAge));
@@ -110,7 +110,7 @@ namespace PlayableKids.Patches
                 if (clan != null)
                 {
                     heroName.SetTextVariable("NAME", hero.FirstName ?? hero.Name);
-                    heroName.SetTextVariable("FACTION", hero.Clan?.Name ?? TextObject.Empty);
+                    heroName.SetTextVariable("FACTION", hero.Clan?.Name ?? TextObject.GetEmpty());
                     name = heroName.ToString();
                 }
                 else
@@ -126,7 +126,7 @@ namespace PlayableKids.Patches
                 if (clan != null)
                 {
                     heroName.SetTextVariable("NAME", hero.FirstName ?? hero.Name);
-                    heroName.SetTextVariable("FACTION", hero.Clan?.Name ?? TextObject.Empty);
+                    heroName.SetTextVariable("FACTION", hero.Clan?.Name ?? TextObject.GetEmpty());
                     yield return new EncyclopediaListItem(hero, heroName.ToString(), "", hero.StringId,
                         __instance.GetIdentifier(typeof(Hero)), func(hero), () => InformationManager.ShowTooltip(typeof(Hero), hero, false));
                 }
@@ -215,7 +215,7 @@ namespace PlayableKids.Patches
                     new SkinGenerationParams((int)SkinMask.NoneVisible, __instance.SpawnEquipment.GetUnderwearType(__instance.IsFemale && __instance.Age >= 14f),
                     (int)__instance.SpawnEquipment.BodyMeshType, (int)__instance.SpawnEquipment.HairCoverType, (int)__instance.SpawnEquipment.BeardCoverType,
                     (int)__instance.SpawnEquipment.BodyDeformType, __instance == Agent.Main, __instance.Character.FaceDirtAmount, __instance.IsFemale ? 1 : 0,
-                    __instance.Character.Race, false, false);
+                    __instance.Character.Race, false, false, 0);
                 __instance.AgentVisuals.AddSkinMeshes(skinParams, __instance.BodyPropertiesValue, true, __instance.Character != null && __instance.Character.FaceMeshCache);
                 AccessTools.Method(typeof(Agent), "SetInitialAgentScale").Invoke(__instance, new object[] { scale });
                 __instance.Age = age;

@@ -9,8 +9,6 @@ namespace PlayableKids.Models
 {
     public sealed class WrappedAgeModel : AgeModel
     {
-        public AgeModel BaseModel { get; }
-
         public override int BecomeInfantAge => BaseModel.BecomeInfantAge;
 
         public override int BecomeChildAge => BaseModel.BecomeChildAge;
@@ -21,21 +19,18 @@ namespace PlayableKids.Models
 
         public override int BecomeOldAge => BaseModel.BecomeOldAge;
 
+        public override int MiddleAdultHoodAge => BaseModel.MiddleAdultHoodAge;
+
         public override int MaxAge => BaseModel.MaxAge;
 
         public WrappedAgeModel(AgeModel baseModel)
         {
-            BaseModel = baseModel;
+            Initialize(baseModel);
         }
 
         public override void GetAgeLimitForLocation(CharacterObject character, out int minimumAge, out int maximumAge, string additionalTags = "")
         {
             BaseModel.GetAgeLimitForLocation(character, out minimumAge, out maximumAge, additionalTags);
-        }
-
-        public override float GetSkillScalingModifierForAge(Hero hero, SkillObject skill, bool isByNaturalGrowth)
-        {
-            return BaseModel.GetSkillScalingModifierForAge(hero, skill, isByNaturalGrowth);
         }
     }
 }

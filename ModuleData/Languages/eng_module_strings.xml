@@ -10,9 +10,6 @@
     <string id="PlayableKids.MinimumAges" text="Age Minimum Settings"/>
     <string id="PlayableKids.CustomAges" text="Custom Age Settings"/>
 
-    <string id="PlayableKids.OverrideWithModels" text="Override With Models"/>
-    <string id="PlayableKids.OverrideWithModels.Hint" text="Select this to override functions within some models with model wrappers. Models are less prone to script breakage by updates, and model wrappers allow compatibility with existing models. Default is enabled. If disabled, patching will be used instead."/>
-    
     <string id="PlayableKids.MinimumPlayerAge" text="Minimum Playable Age"/>
     <string id="PlayableKids.MinimumPlayerAge.Hint" text="The minimum age for a hero to be playable."/>
     <string id="PlayableKids.MinimumVisibleAge" text="Minimum Visible Age"/>
@@ -21,14 +18,16 @@
     <string id="PlayableKids.MinimumPositionAge.Hint" text="The minimum age for a hero to perform in a position."/>
     <string id="PlayableKids.MinimumExecutionAge" text="Minimum Execution Age"/>
     <string id="PlayableKids.MinimumExecutionAge.Hint" text="Minimum age for a character to be eligible for execution."/>
-    
+
+    <string id="PlayableKids.PlayerStartingAge" text="Player Age"/>
+    <string id="PlayableKids.PlayerStartingAge.Hint" text="Starting age of the player. In Sandbox Mode, this determines the minimum age of the player (higher experience will still add 10 years per level)."/>
     <string id="PlayableKids.ElderBrotherStartingAge" text="Elder Brother Age"/>
     <string id="PlayableKids.ElderBrotherStartingAge.Hint" text="Starting age of the elder brother."/>
     <string id="PlayableKids.LittleSisterStartingAge" text="Little Sister Age"/>
     <string id="PlayableKids.LittleSisterStartingAge.Hint" text="Starting age of the little sister."/>
     <string id="PlayableKids.LittleBrotherStartingAge" text="Little Brother Age"/>
     <string id="PlayableKids.LittleBrotherStartingAge.Hint" text="Starting age of the little brother."/>
-    <string id="PlayableKids.WandererMinAgeIncrease" text="Wanderer Mininum Age Increase"/>
+    <string id="PlayableKids.WandererMinAgeIncrease" text="Wanderer Minimum Age Increase"/>
     <string id="PlayableKids.WandererMinAgeIncrease.Hint" text="Minimum increase to a wanderer's age."/>
     <string id="PlayableKids.WandererAgeRandomization" text="Wanderer Age Randomization"/>
     <string id="PlayableKids.WandererAgeRandomization.Hint" text="Randomization in a wanderer's age."/>
